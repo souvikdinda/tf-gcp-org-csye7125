@@ -9,7 +9,6 @@ terraform {
 
 
 provider "google" {
-  credentials = file("~/.ssh/csye7125-gke-401204-ad73564f15f8.json")
-  project     = var.project_id
-  region      = var.region
+  project = var.project_id
+  region  = var.region
 }
