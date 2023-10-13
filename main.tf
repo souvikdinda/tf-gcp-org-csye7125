@@ -3,12 +3,14 @@ resource "google_compute_network" "gcp_vpc" {
   name                    = "gke-cluster-vpc"
   auto_create_subnetworks = false
   project                 = google_project.gke-project.project_id
+
+  depends_on = [google_project_service.compute]
 }
 
 # Public Subnet
 resource "google_compute_subnetwork" "gcp_subnet" {
   name                     = "gcp-subnet1"
-  ip_cidr_range            = "10.0.0.0/24"
+  ip_cidr_range            = cidrsubnet(var.cidr_range,8,0)
   region                   = var.region
   network                  = google_compute_network.gcp_vpc.id
   private_ip_google_access = true
@@ -34,11 +36,13 @@ resource "google_compute_firewall" "main_vpc_firewall" {
 
 }
 
-# # Assigning External IP Addr
-# resource "google_compute_address" "external_ip" {
-#   name   = "external-ip"
-#   region = var.region
-# }
+# Assigning External IP Addr
+resource "google_compute_address" "external_ip" {
+  name       = "external-ip"
+  region     = var.region
+  project    = google_project.gke-project.project_id
+  depends_on = [google_project_service.compute]
+}
 
 # # Create route for Route Table for above subnet
 # # resource "google_compute_route" "default_route" {
@@ -48,19 +52,21 @@ resource "google_compute_firewall" "main_vpc_firewall" {
 # #   next_hop_gateway = google_compute_network.gcp_vpc.self_link
 # # }
 
-# # Router for above subnet
-# resource "google_compute_router" "main_router" {
-#   name    = "main-router"
-#   network = google_compute_network.gcp_vpc.id
-# }
+# Router for above subnet
+resource "google_compute_router" "main_router" {
+  name    = "main-router"
+  network = google_compute_network.gcp_vpc.id
+  project = google_project.gke-project.project_id
+}
 
-# # Map above created router to the subnet
-# resource "google_compute_router_interface" "subnet_interface" {
-#   name       = "subnet-interface"
-#   router     = google_compute_router.main_router.name
-#   region     = var.region
-#   subnetwork = google_compute_subnetwork.gcp_subnet.self_link
-# }
+# Map above created router to the subnet
+resource "google_compute_router_interface" "subnet_interface" {
+  name       = "subnet-interface"
+  router     = google_compute_router.main_router.name
+  project    = google_project.gke-project.project_id
+  region     = var.region
+  subnetwork = google_compute_subnetwork.gcp_subnet.self_link
+}
 
 
 # # NAT Gateway for private subnets

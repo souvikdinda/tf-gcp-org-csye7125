@@ -1,6 +1,6 @@
 resource "google_folder" "gke_cluster_folder" {
   display_name = "my-gke-cluster"
-  parent       = "organizations/561135202163"
+  parent       = "organizations/${var.organization_id}"
 }
 
 data "google_billing_account" "acct" {
@@ -10,10 +10,14 @@ data "google_billing_account" "acct" {
 
 resource "google_project" "gke-project" {
   name       = "csye7125-gke-cluster"
-  project_id = "csye7125-gke-${uuid()}"
+  project_id = "csye7125-gke-${substr(uuid(), 0, 8)}"
   folder_id  = google_folder.gke_cluster_folder.id
 
   billing_account = data.google_billing_account.acct.id
+
+  lifecycle {
+    ignore_changes = [project_id]
+  }
 }
 
 resource "google_project_service" "compute" {
