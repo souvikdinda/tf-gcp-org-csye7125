@@ -10,7 +10,7 @@ resource "google_compute_network" "gcp_vpc" {
 # Public Subnet
 resource "google_compute_subnetwork" "gcp_subnet" {
   name                     = "gcp-subnet1"
-  ip_cidr_range            = cidrsubnet(var.cidr_range,8,0)
+  ip_cidr_range            = cidrsubnet(var.cidr_range, 8, 0)
   region                   = var.region
   network                  = google_compute_network.gcp_vpc.id
   private_ip_google_access = true
