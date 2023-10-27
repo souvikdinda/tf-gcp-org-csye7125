@@ -61,8 +61,8 @@ resource "google_compute_router" "main_router" {
   network = google_compute_network.gcp_vpc.id
   project = google_project.gke-project.project_id
   bgp {
-    asn              = 64514  # You can use a different ASN
-    advertise_mode   = "CUSTOM"
+    asn               = 64514 # You can use a different ASN
+    advertise_mode    = "CUSTOM"
     advertised_groups = ["ALL_SUBNETS"]
   }
 }
@@ -104,6 +104,6 @@ resource "google_compute_router_nat" "nat_gateway" {
     name                    = google_compute_subnetwork.private_gcp_subnet.name
     source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
   }
-  nat_ips = [google_compute_address.external_ip.self_link]
+  nat_ips    = [google_compute_address.external_ip.self_link]
   depends_on = [google_compute_address.external_ip]
 }
