@@ -14,7 +14,15 @@ resource "google_container_cluster" "gke_cluster" {
 
   private_cluster_config {
     enable_private_nodes   = true
+    enable_private_endpoint = true
     master_ipv4_cidr_block = var.master_ipv4_cidr_block
+  }
+
+  master_authorized_networks_config {
+    cidr_blocks {
+      cidr_block   = cidrsubnet(var.cidr_range, 8, 1)
+      display_name = "my-gke-cluster-master-authorized-networks"
+    }
   }
 
   node_pool {

@@ -9,8 +9,8 @@ resource "google_compute_network" "gcp_vpc" {
 
 # Public Subnet
 resource "google_compute_subnetwork" "gcp_subnet" {
-  name                     = "gcp-subnet1"
-  ip_cidr_range            = cidrsubnet(var.cidr_range, 8, 0)
+  name                     = "public-subnet"
+  ip_cidr_range            = cidrsubnet(var.cidr_range, 8, 1)
   region                   = var.region
   network                  = google_compute_network.gcp_vpc.id
   private_ip_google_access = true
@@ -19,8 +19,8 @@ resource "google_compute_subnetwork" "gcp_subnet" {
 
 # Private Subnet
 resource "google_compute_subnetwork" "private_gcp_subnet" {
-  name                     = "private-gcp-subnet"
-  ip_cidr_range            = cidrsubnet(var.cidr_range, 8, 1)
+  name                     = "private-subnet"
+  ip_cidr_range            = cidrsubnet(var.cidr_range, 8, 2)
   region                   = var.region
   network                  = google_compute_network.gcp_vpc.id
   private_ip_google_access = true
@@ -55,19 +55,16 @@ resource "google_compute_address" "external_ip" {
   depends_on = [google_project_service.compute]
 }
 
-# # Create route for Route Table for above subnet
-# # resource "google_compute_route" "default_route" {
-# #   name             = "default-route"
-# #   network          = google_compute_network.gcp_vpc.name
-# #   dest_range       = "0.0.0.0/0"
-# #   next_hop_gateway = google_compute_network.gcp_vpc.self_link
-# # }
-
 # Router for above subnet
 resource "google_compute_router" "main_router" {
   name    = "main-router"
   network = google_compute_network.gcp_vpc.id
   project = google_project.gke-project.project_id
+  bgp {
+    asn              = 64514  # You can use a different ASN
+    advertise_mode   = "CUSTOM"
+    advertised_groups = ["ALL_SUBNETS"]
+  }
 }
 
 # Map above created router to the subnet
@@ -79,26 +76,34 @@ resource "google_compute_router_interface" "subnet_interface" {
   subnetwork = google_compute_subnetwork.gcp_subnet.self_link
 }
 
+resource "google_compute_router" "pvt_router" {
+  name    = "pvt-router"
+  network = google_compute_network.gcp_vpc.id
+  project = google_project.gke-project.project_id
+}
 
-# # NAT Gateway for private subnets
-# # resource "google_compute_router_nat" "nat_gateway" {
-# #   name                               = "nat-gateway"
-# #   router                             = google_compute_router.main_router.name
-# #   region                             = var.region
-# #   nat_ip_allocate_option             = "AUTO_ONLY"
-# #   source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
-# #   subnetwork {
-# #     name                    = google_compute_subnetwork.gcp_subnet.name
-# #     source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
-# #   }
-# #   nat_ips = [google_compute_address.external_ip.address]
-# # }
+# Map above created router to the subnet
+resource "google_compute_router_interface" "pvt_subnet_interface" {
+  name       = "pvt-subnet-interface"
+  router     = google_compute_router.pvt_router.name
+  project    = google_project.gke-project.project_id
+  region     = var.region
+  subnetwork = google_compute_subnetwork.private_gcp_subnet.self_link
+}
 
 
-# # Assigning External IP Addr
-# resource "google_compute_address" "bastion_external_ip" {
-#   name       = "bastion-external-ip"
-#   region     = var.region
-#   project    = google_project.gke-project.project_id
-#   depends_on = [google_project_service.compute]
-# }
+# NAT Gateway for private subnets
+resource "google_compute_router_nat" "nat_gateway" {
+  project                            = google_project.gke-project.project_id
+  name                               = "nat-gateway"
+  router                             = google_compute_router.pvt_router.name
+  region                             = var.region
+  nat_ip_allocate_option             = "MANUAL_ONLY"
+  source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
+  subnetwork {
+    name                    = google_compute_subnetwork.private_gcp_subnet.name
+    source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
+  }
+  nat_ips = [google_compute_address.external_ip.self_link]
+  depends_on = [google_compute_address.external_ip]
+}

@@ -17,7 +17,7 @@ variable "organization_id" {
 }
 
 variable "instance_image" {
-  default = "ubuntu-os-cloud/ubuntu-2204-lts"
+  default = "debian-12-bookworm-v20231010"
 }
 
 variable "instance_type" {
@@ -29,7 +29,7 @@ variable "node_count" {
 }
 
 variable "min_node_count" {
-  default = 1
+  default = 3
 }
 
 variable "max_node_count" {
@@ -58,11 +58,11 @@ variable "image_type" {
 # }
 
 variable "master_ipv4_cidr_block" {
-  default = "10.1.0.0/28"
+  default = "10.10.0.0/28"
 }
 
 variable "bastion_username" {
-  default = "vaishnavi"
+  default = "souvik"
 }
 
 variable "project_id" {
@@ -76,5 +76,5 @@ variable "node_disk_type" {
   default = "pd-standard"
 }
 variable "ssh_path" {
-  default = "~/.ssh/my-key.pem.pub"
+  default = "~/.ssh/ec2.pub"
 }
