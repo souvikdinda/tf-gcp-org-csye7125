@@ -5,7 +5,7 @@ resource "google_compute_instance" "bastion_instance" {
   zone         = data.google_compute_zones.available_zones.names[0]
   project      = google_project.gke-project.project_id
   metadata = {
-    ssh-keys = "${var.bastion_username}:${file("~/.ssh/my-key.pem.pub")}"
+    ssh-keys = "${var.bastion_username}:${file(var.ssh_path)}"
   }
 
 
