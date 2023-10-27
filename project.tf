@@ -48,3 +48,9 @@ resource "google_project_iam_member" "container_admin_roles" {
   role    = "roles/container.admin" # Or "roles/container.admin" for Kubernetes Engine Admin role
   member  = "serviceAccount:${google_service_account.my_service_account.email}"
 }
+
+resource "google_project_iam_member" "iap_access" {
+  project = google_project.gke-project.project_id
+  role    = "roles/iap.tunnelResourceAccessor"
+  member  = "serviceAccount:${google_service_account.my_service_account.email}"
+}
