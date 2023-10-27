@@ -95,10 +95,10 @@ resource "google_compute_router_interface" "subnet_interface" {
 # # }
 
 
-# Assigning External IP Addr
-resource "google_compute_address" "bastion_external_ip" {
-  name       = "bastion-external-ip"
-  region     = var.region
-  project    = google_project.gke-project.project_id
-  depends_on = [google_project_service.compute]
-}
+# # Assigning External IP Addr
+# resource "google_compute_address" "bastion_external_ip" {
+#   name       = "bastion-external-ip"
+#   region     = var.region
+#   project    = google_project.gke-project.project_id
+#   depends_on = [google_project_service.compute]
+# }

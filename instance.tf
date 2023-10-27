@@ -1,9 +1,11 @@
-resource "google_compute_instance" "gcp_instance" {
+resource "google_compute_instance" "bastion_instance" {
   name         = "gke-cluster-vm-instance"
   machine_type = var.instance_type
   zone         = data.google_compute_zones.available_zones.names[0]
   project      = google_project.gke-project.project_id
-
+  metadata = {
+    ssh-keys = "${var.bastion_username}:${file(var.ssh_path)}"
+  }
   boot_disk {
     initialize_params {
       image = var.instance_image
