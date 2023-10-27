@@ -1,5 +1,3 @@
-# 
-
 # GKE Cluster and Node Pool
 resource "google_container_cluster" "gke_cluster" {
   name                = "my-gke-cluster"
@@ -41,7 +39,6 @@ resource "google_container_cluster" "gke_cluster" {
       disk_size_gb = var.node_disk_size_gb
       image_type   = "COS_CONTAINERD"
       disk_type    = var.node_disk_type
-      //service_account = 
 
     }
 

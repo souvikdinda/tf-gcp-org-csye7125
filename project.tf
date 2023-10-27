@@ -24,6 +24,7 @@ resource "google_project" "gke-project" {
 resource "google_project_service" "compute" {
   project = google_project.gke-project.project_id
   service = "compute.googleapis.com"
+  disable_dependent_services = true
 }
 
 resource "google_service_account" "my_service_account" {
@@ -41,11 +42,12 @@ resource "google_project_iam_member" "my_service_account_roles" {
 resource "google_project_service" "kubernetes" {
   project = google_project.gke-project.project_id
   service = "container.googleapis.com"
+  disable_dependent_services = true
 }
 
 resource "google_project_iam_member" "container_admin_roles" {
   project = google_project.gke-project.project_id
-  role    = "roles/container.admin" # Or "roles/container.admin" for Kubernetes Engine Admin role
+  role    = "roles/container.admin"
   member  = "serviceAccount:${google_service_account.my_service_account.email}"
 }
 

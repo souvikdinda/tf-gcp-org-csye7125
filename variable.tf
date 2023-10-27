@@ -25,15 +25,15 @@ variable "instance_type" {
 }
 
 variable "node_count" {
-  default = 3
+  default = 1
 }
 
 variable "min_node_count" {
-  default = 3
+  default = 1
 }
 
 variable "max_node_count" {
-  default = 5
+  default = 3
 }
 
 variable "node_machine_type" {
@@ -49,14 +49,6 @@ variable "image_type" {
   default = "COS"
 }
 
-# variable "bastion_machine_type" {
-#   default = "n1-standard-1"
-# }
-
-# variable "bastion_image" {
-#   default = "ubuntu-os-cloud/ubuntu-2204-lts"
-# }
-
 variable "master_ipv4_cidr_block" {
   default = "10.10.0.0/28"
 }
@@ -65,13 +57,6 @@ variable "bastion_username" {
   default = "souvik"
 }
 
-variable "project_id" {
-  default = "google_project.gke-project.project_id"
-}
-
-variable "billing_account" {
-  default = "01DC80-2995F5-3FF285"
-}
 variable "node_disk_type" {
   default = "pd-standard"
 }
