@@ -48,13 +48,14 @@ variable "node_disk_size_gb" {
 variable "image_type" {
   default = "COS"
 }
-variable "bastion_machine_type" {
-  default = "n1-standard-1"
-}
 
-variable "bastion_image" {
-  default = "ubuntu-os-cloud/ubuntu-2204-lts"
-}
+# variable "bastion_machine_type" {
+#   default = "n1-standard-1"
+# }
+
+# variable "bastion_image" {
+#   default = "ubuntu-os-cloud/ubuntu-2204-lts"
+# }
 
 variable "master_ipv4_cidr_block" {
   default = "10.1.0.0/28"
