@@ -74,6 +74,6 @@ variable "billing_account" {
 variable "node_disk_type" {
   default = "pd-standard"
 }
-variable "ssh_path"{
+variable "ssh_path" {
   default = "~/.ssh/my-key.pem.pub"
 }
