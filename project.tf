@@ -22,8 +22,8 @@ resource "google_project" "gke-project" {
 }
 
 resource "google_project_service" "compute" {
-  project = google_project.gke-project.project_id
-  service = "compute.googleapis.com"
+  project                    = google_project.gke-project.project_id
+  service                    = "compute.googleapis.com"
   disable_dependent_services = true
 }
 
@@ -40,8 +40,8 @@ resource "google_project_iam_member" "my_service_account_roles" {
 }
 
 resource "google_project_service" "kubernetes" {
-  project = google_project.gke-project.project_id
-  service = "container.googleapis.com"
+  project                    = google_project.gke-project.project_id
+  service                    = "container.googleapis.com"
   disable_dependent_services = true
 }
 
