@@ -1,7 +1,7 @@
 resource "google_folder" "gke_cluster_folder" {
   display_name = "my-gke-cluster"
   parent       = "organizations/${var.organization_id}"
-  
+
 }
 
 data "google_billing_account" "acct" {
@@ -45,6 +45,6 @@ resource "google_project_service" "kubernetes" {
 
 resource "google_project_iam_member" "container_admin_roles" {
   project = google_project.gke-project.project_id
-  role    = "roles/container.admin"  # Or "roles/container.admin" for Kubernetes Engine Admin role
+  role    = "roles/container.admin" # Or "roles/container.admin" for Kubernetes Engine Admin role
   member  = "serviceAccount:${google_service_account.my_service_account.email}"
 }
