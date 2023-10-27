@@ -17,6 +17,17 @@ resource "google_compute_subnetwork" "gcp_subnet" {
   project                  = google_project.gke-project.project_id
 }
 
+# Private Subnet
+resource "google_compute_subnetwork" "private_gcp_subnet" {
+  name                     = "private-gcp-subnet"
+  ip_cidr_range            = cidrsubnet(var.cidr_range, 8, 1)
+  region                   = var.region
+  network                  = google_compute_network.gcp_vpc.id
+  private_ip_google_access = true
+  project                  = google_project.gke-project.project_id
+}
+
+
 # Firewall rules that allows traffic from anywhere for SSH, HTTP, HTTPs
 resource "google_compute_firewall" "main_vpc_firewall" {
   name    = "main-vpc-firewall"
@@ -84,3 +95,10 @@ resource "google_compute_router_interface" "subnet_interface" {
 # # }
 
 
+# Assigning External IP Addr
+resource "google_compute_address" "bastion_external_ip" {
+  name       = "bastion-external-ip"
+  region     = var.region
+  project    = google_project.gke-project.project_id
+  depends_on = [google_project_service.compute]
+}
