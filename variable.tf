@@ -29,31 +29,31 @@ variable "node_count" {
 }
 
 variable "min_node_count" {
-  default     = 1
+  default = 1
 }
 
 variable "max_node_count" {
-  default     = 5
+  default = 5
 }
 
 variable "node_machine_type" {
-  default     = "e2-medium"
+  default = "e2-medium"
 }
 
 
 variable "node_disk_size_gb" {
-  default     = 50
+  default = 50
 }
 
 variable "image_type" {
-  default     = "COS"
+  default = "COS"
 }
 variable "bastion_machine_type" {
-  default     = "n1-standard-1" 
+  default = "n1-standard-1"
 }
 
 variable "bastion_image" {
-  default     = "ubuntu-os-cloud/ubuntu-2204-lts"
+  default = "ubuntu-os-cloud/ubuntu-2204-lts"
 }
 
 variable "master_ipv4_cidr_block" {
@@ -61,13 +61,13 @@ variable "master_ipv4_cidr_block" {
 }
 
 variable "bastion_username" {
-  default     = "vaishnavi"
+  default = "vaishnavi"
 }
 
 variable "project_id" {
-  default =  "google_project.gke-project.project_id"
+  default = "google_project.gke-project.project_id"
 }
- 
+
 variable "billing_account" {
   default = "01DC80-2995F5-3FF285"
 }
