@@ -13,9 +13,9 @@ resource "google_container_cluster" "gke_cluster" {
   node_locations = data.google_compute_zones.available_zones.names
 
   private_cluster_config {
-    enable_private_nodes   = true
+    enable_private_nodes    = true
     enable_private_endpoint = true
-    master_ipv4_cidr_block = var.master_ipv4_cidr_block
+    master_ipv4_cidr_block  = var.master_ipv4_cidr_block
   }
 
   master_authorized_networks_config {
