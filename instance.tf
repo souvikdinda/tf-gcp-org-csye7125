@@ -15,14 +15,5 @@ resource "google_compute_instance" "bastion_instance" {
     network    = google_compute_network.gcp_vpc.name
     subnetwork = google_compute_subnetwork.gcp_subnet.self_link
   }
-
-  metadata_startup_script = <<-EOF
-    #!/bin/bash
-    sudo apt-get update
-    sudo apt-get install kubectl
-    sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
-    curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-    chmod 700 get_helm.sh
-    ./get_helm.sh
-    EOF
+  metadata_startup_script = file("startup_script.sh")
 }

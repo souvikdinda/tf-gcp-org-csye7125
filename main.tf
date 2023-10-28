@@ -61,7 +61,7 @@ resource "google_compute_router" "main_router" {
   network = google_compute_network.gcp_vpc.id
   project = google_project.gke-project.project_id
   bgp {
-    asn               = 64514 # You can use a different ASN
+    asn               = 64514
     advertise_mode    = "CUSTOM"
     advertised_groups = ["ALL_SUBNETS"]
   }
@@ -95,15 +95,14 @@ resource "google_compute_router_interface" "pvt_subnet_interface" {
 # NAT Gateway for private subnets
 resource "google_compute_router_nat" "nat_gateway" {
   project                            = google_project.gke-project.project_id
-  name                               = "nat-gateway"
+  name                               = "nat-gateway1"
   router                             = google_compute_router.pvt_router.name
   region                             = var.region
-  nat_ip_allocate_option             = "MANUAL_ONLY"
+  nat_ip_allocate_option             = "AUTO_ONLY"
   source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
   subnetwork {
     name                    = google_compute_subnetwork.private_gcp_subnet.name
     source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
   }
-  nat_ips    = [google_compute_address.external_ip.self_link]
   depends_on = [google_compute_address.external_ip]
 }
