@@ -3,7 +3,7 @@
 
 ### Summary
 ---------------------------------------------------------------------------------------------
-This project focuses on setting up infrastructure in Google Cloud Platform (GCP) to facilitate the launch of a Kubernetes cluster and various other resources such as Virtual Private Cloud (VPC) network with subnets, routers, firewall rules, and more. This setup should enable the deployment of virtual machines (VMs) with public IP addresses and SSH access.
+This project focuses on setting up a comprehensive infrastructure in Google Cloud Platform (GCP) using Terraform. The infrastructure includes the creation of a Google Kubernetes Engine (GKE) cluster, Virtual Private Cloud (VPC) network with subnets, routers, firewall rules, and more. Additionally, a Bastion host is created to facilitate secure access to the private GKE cluster.
 
 ### To run code:
 -----------------------
@@ -68,8 +68,10 @@ The Terraform scripts in this repository set up the following GCPinfrastructure 
 - **Routes**: GCP uses Routes to control the routing of traffic between subnets and to the internet.
 - **Cloud Router**: To enable dynamic routing between your on-premises network and your VPC.
 - **Firewall Rules**: GCP uses Firewall Rules to define inbound and outbound traffic rules for instances.
-- **Instances**: Define your compute instances (VMs) that run other services.
-- **DNS Cloud DNS Record**: DNS record managed in Google Cloud DNS to associate a custom subdomain. 
+- **Instances (Bastion Host)**: A Bastion host is created in the same VPC, in a public subnet, to facilitate secure access to private GKE cluster.
+- **NAT Gatewayr**: To enable internet access for a Kubernetes cluster, a NAT Gateway needs to be added.
+- **Google Kubernetes Engine (GKE) Cluster**:  A private regional multi-zone GKE cluster in standard mode using Container-Optimized OS. It is set up for Binary Authorization and Workload Identity.
+
 
 
 _This project is part of CSYE7125 course_
