@@ -2,7 +2,7 @@
 resource "google_container_cluster" "gke_cluster" {
   name                = "my-gke-cluster"
   location            = var.region
-  project             = google_project.gke-project.project_id
+  project             = var.project_id
   network             = google_compute_network.gcp_vpc.name
   subnetwork          = google_compute_subnetwork.private_gcp_subnet.self_link
   deletion_protection = false
@@ -19,12 +19,12 @@ resource "google_container_cluster" "gke_cluster" {
   master_authorized_networks_config {
     cidr_blocks {
       cidr_block   = cidrsubnet(var.cidr_range, 8, 1)
-      display_name = "my-gke-cluster-master-authorized-networks"
+      display_name = "master-authorized-networks"
     }
   }
 
   node_pool {
-    name               = "my-node-pool"
+    name               = "node-pool"
     initial_node_count = var.node_count
     autoscaling {
       min_node_count = var.min_node_count
@@ -49,11 +49,9 @@ resource "google_container_cluster" "gke_cluster" {
   }
 
   workload_identity_config {
-    workload_pool = "${google_project.gke-project.project_id}.svc.id.goog"
+    workload_pool = "${var.project_id}.svc.id.goog"
   }
-  depends_on = [google_project.gke-project]
 }
-
 
 
  

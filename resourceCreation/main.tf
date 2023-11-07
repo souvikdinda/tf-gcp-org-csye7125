@@ -2,9 +2,7 @@
 resource "google_compute_network" "gcp_vpc" {
   name                    = "gke-cluster-vpc"
   auto_create_subnetworks = false
-  project                 = google_project.gke-project.project_id
-
-  depends_on = [google_project_service.compute]
+  project                 = var.project_id
 }
 
 # Public Subnet
@@ -14,7 +12,7 @@ resource "google_compute_subnetwork" "gcp_subnet" {
   region                   = var.region
   network                  = google_compute_network.gcp_vpc.id
   private_ip_google_access = true
-  project                  = google_project.gke-project.project_id
+  project                  = var.project_id
 }
 
 # Private Subnet
@@ -24,7 +22,7 @@ resource "google_compute_subnetwork" "private_gcp_subnet" {
   region                   = var.region
   network                  = google_compute_network.gcp_vpc.id
   private_ip_google_access = true
-  project                  = google_project.gke-project.project_id
+  project                  = var.project_id
 }
 
 
@@ -32,7 +30,7 @@ resource "google_compute_subnetwork" "private_gcp_subnet" {
 resource "google_compute_firewall" "main_vpc_firewall" {
   name    = "main-vpc-firewall"
   network = google_compute_network.gcp_vpc.name
-  project = google_project.gke-project.project_id
+  project = var.project_id
 
   allow {
     protocol = "icmp"
@@ -51,15 +49,15 @@ resource "google_compute_firewall" "main_vpc_firewall" {
 resource "google_compute_address" "external_ip" {
   name       = "external-ip"
   region     = var.region
-  project    = google_project.gke-project.project_id
-  depends_on = [google_project_service.compute]
+  project    = var.project_id
+  # depends_on = [google_project_service.compute]
 }
 
 # Router for above subnet
 resource "google_compute_router" "main_router" {
   name    = "main-router"
   network = google_compute_network.gcp_vpc.id
-  project = google_project.gke-project.project_id
+  project = var.project_id
   bgp {
     asn               = 64514
     advertise_mode    = "CUSTOM"
@@ -69,9 +67,9 @@ resource "google_compute_router" "main_router" {
 
 # Map above created router to the subnet
 resource "google_compute_router_interface" "subnet_interface" {
-  name       = "subnet-interface"
+  name       = "pub-subnet-router-interface"
   router     = google_compute_router.main_router.name
-  project    = google_project.gke-project.project_id
+  project    = var.project_id
   region     = var.region
   subnetwork = google_compute_subnetwork.gcp_subnet.self_link
 }
@@ -79,14 +77,14 @@ resource "google_compute_router_interface" "subnet_interface" {
 resource "google_compute_router" "pvt_router" {
   name    = "pvt-router"
   network = google_compute_network.gcp_vpc.id
-  project = google_project.gke-project.project_id
+  project = var.project_id
 }
 
 # Map above created router to the subnet
 resource "google_compute_router_interface" "pvt_subnet_interface" {
-  name       = "pvt-subnet-interface"
+  name       = "pvt-subnet-router-interface"
   router     = google_compute_router.pvt_router.name
-  project    = google_project.gke-project.project_id
+  project    = var.project_id
   region     = var.region
   subnetwork = google_compute_subnetwork.private_gcp_subnet.self_link
 }
@@ -94,7 +92,7 @@ resource "google_compute_router_interface" "pvt_subnet_interface" {
 
 # NAT Gateway for private subnets
 resource "google_compute_router_nat" "nat_gateway" {
-  project                            = google_project.gke-project.project_id
+  project                            = var.project_id
   name                               = "nat-gateway1"
   router                             = google_compute_router.pvt_router.name
   region                             = var.region
@@ -104,5 +102,4 @@ resource "google_compute_router_nat" "nat_gateway" {
     name                    = google_compute_subnetwork.private_gcp_subnet.name
     source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
   }
-  depends_on = [google_compute_address.external_ip]
 }

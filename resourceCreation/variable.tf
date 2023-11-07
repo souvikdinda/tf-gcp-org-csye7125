@@ -2,18 +2,17 @@ variable "region" {
   default = "us-east1"
 }
 
+variable "project_id" {
+  default = ""
+}
+
 data "google_compute_zones" "available_zones" {
   region     = var.region
-  project    = google_project.gke-project.project_id
-  depends_on = [google_project_service.compute]
+  project    = var.project_id
 }
 
 variable "cidr_range" {
   default = "10.0.0.0/16"
-}
-
-variable "organization_id" {
-  default = "561135202163"
 }
 
 variable "instance_image" {
@@ -33,13 +32,12 @@ variable "min_node_count" {
 }
 
 variable "max_node_count" {
-  default = 3
+  default = 6
 }
 
 variable "node_machine_type" {
   default = "e2-medium"
 }
-
 
 variable "node_disk_size_gb" {
   default = 50
@@ -53,13 +51,30 @@ variable "master_ipv4_cidr_block" {
   default = "10.10.0.0/28"
 }
 
-variable "bastion_username" {
-  default = "souvik"
-}
-
 variable "node_disk_type" {
   default = "pd-standard"
 }
+
 variable "ssh_path" {
-  default = "~/.ssh/ec2.pub"
+  default = ""
+}
+
+variable "bastion_username" {
+  default = ""
+}
+
+variable "github_repo" {
+  default = ""
+}
+
+variable "github_username" {
+  default = ""
+}
+
+variable "github_token" {
+  default = ""
+}
+
+variable "helm_chart_version" {
+  default = "1.1.0"
 }
