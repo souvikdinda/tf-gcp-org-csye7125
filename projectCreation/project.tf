@@ -25,24 +25,26 @@ resource "google_project_service" "compute" {
   project                    = google_project.gke-project.project_id
   service                    = "compute.googleapis.com"
   disable_dependent_services = true
-}
-
-resource "google_service_account" "my_service_account" {
-  project      = google_project.gke-project.project_id
-  account_id   = "my-service-account"
-  display_name = "My Service Account"
-}
-
-resource "google_project_iam_member" "my_service_account_roles" {
-  project = google_project.gke-project.project_id
-  role    = "roles/compute.admin"
-  member  = "serviceAccount:${google_service_account.my_service_account.email}"
+  disable_on_destroy         = true
 }
 
 resource "google_project_service" "kubernetes" {
   project                    = google_project.gke-project.project_id
   service                    = "container.googleapis.com"
   disable_dependent_services = true
+  disable_on_destroy         = true
+}
+
+resource "google_service_account" "my_service_account" {
+  project      = google_project.gke-project.project_id
+  account_id   = "gke-svc-account"
+  display_name = "GKE Service Account"
+}
+
+resource "google_project_iam_member" "my_service_account_roles" {
+  project = google_project.gke-project.project_id
+  role    = "roles/compute.admin"
+  member  = "serviceAccount:${google_service_account.my_service_account.email}"
 }
 
 resource "google_project_iam_member" "container_admin_roles" {
