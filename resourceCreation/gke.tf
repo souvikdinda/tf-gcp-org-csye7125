@@ -4,15 +4,15 @@ resource "google_container_cluster" "gke_cluster" {
   location            = var.region
   project             = var.project_id
   network             = google_compute_network.gcp_vpc.name
-  subnetwork          = google_compute_subnetwork.private_gcp_subnet.self_link
+  subnetwork          = google_compute_subnetwork.gcp_subnet.self_link
   deletion_protection = false
 
   # Retrieve available zones for the specified region
   node_locations = data.google_compute_zones.available_zones.names
 
   private_cluster_config {
-    enable_private_nodes    = true
-    enable_private_endpoint = true
+    enable_private_nodes    = false
+    enable_private_endpoint = false
     master_ipv4_cidr_block  = var.master_ipv4_cidr_block
   }
 

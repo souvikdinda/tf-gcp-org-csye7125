@@ -26,3 +26,9 @@ provider "helm" {
   }
 
 }
+
+resource "helm_release" "my_release" {
+  name       = "my-release"
+  chart      = "./path/to/your/chart"
+  namespace  = "default"  
+} 
