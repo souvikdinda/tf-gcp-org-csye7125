@@ -104,3 +104,4 @@ resource "google_compute_router_nat" "nat_gateway" {
     source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
   }
 }
+
