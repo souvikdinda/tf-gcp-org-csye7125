@@ -20,3 +20,4 @@ resource "google_compute_instance" "bastion_instance" {
   }
   metadata_startup_script = file("startup_script.sh")
 }
+
