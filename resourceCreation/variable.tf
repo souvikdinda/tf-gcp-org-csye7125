@@ -63,18 +63,18 @@ variable "bastion_username" {
   default = ""
 }
 
-variable "github_repo" {
-  default = ""
-}
+# variable "github_repo" {
+#   default = ""
+# }
 
-variable "github_username" {
-  default = ""
-}
+# variable "github_username" {
+#   default = ""
+# }
 
-variable "github_token" {
-  default = ""
-}
+# variable "github_token" {
+#   default = ""
+# }
 
-variable "helm_chart_version" {
-  default = "1.1.0"
-}
+# variable "helm_chart_version" {
+#   default = "1.1.0"
+# }
