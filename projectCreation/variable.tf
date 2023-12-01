@@ -10,3 +10,4 @@ output "project_id" {
   value       = google_project.gke-project.project_id
   depends_on  = [google_project.gke-project]
 }
+

@@ -3,7 +3,7 @@ variable "region" {
 }
 
 variable "project_id" {
-  default = ""
+  default = "csye7125-gke-f8c10e6f"
 }
 
 data "google_compute_zones" "available_zones" {
@@ -56,11 +56,15 @@ variable "node_disk_type" {
 }
 
 variable "ssh_path" {
-  default = ""
+  default = "~/.ssh/my-key.pem.pub"
 }
 
 variable "bastion_username" {
-  default = ""
+  default = "vaishnavi"
+}
+
+variable "jenkins_ip" {
+  default = "54.198.138.212/32"
 }
 
 # variable "github_repo" {

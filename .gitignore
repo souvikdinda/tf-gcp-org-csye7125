@@ -35,3 +35,4 @@ terraform.rc
 
 # Include lock files
 *.lock.hcl
+.DS_Store
