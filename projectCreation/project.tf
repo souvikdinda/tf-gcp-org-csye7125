@@ -41,6 +41,8 @@ resource "google_service_account" "my_service_account" {
   display_name = "GKE Service Account"
 }
 
+
+
 resource "google_project_iam_member" "my_service_account_roles" {
   project = google_project.gke-project.project_id
   role    = "roles/compute.admin"

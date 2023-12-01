@@ -21,7 +21,12 @@ resource "google_container_cluster" "gke_cluster" {
       cidr_block   = cidrsubnet(var.cidr_range, 8, 1)
       display_name = "master-authorized-networks"
     }
+    cidr_blocks {
+    cidr_block   = var.jenkins_ip
+    display_name = "jenkins-server"
   }
+  }
+
 
   node_pool {
     name               = "node-pool"
