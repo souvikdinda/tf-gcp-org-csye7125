@@ -6,7 +6,9 @@ resource "google_container_cluster" "gke_cluster" {
   network             = google_compute_network.gcp_vpc.name
   subnetwork          = google_compute_subnetwork.gcp_subnet.self_link
   deletion_protection = false
-
+  network_policy {
+    enabled = true
+  }
   # Retrieve available zones for the specified region
   node_locations = data.google_compute_zones.available_zones.names
 
