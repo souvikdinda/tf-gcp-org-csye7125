@@ -20,7 +20,7 @@ resource "google_container_cluster" "gke_cluster" {
 
   master_authorized_networks_config {
     cidr_blocks {
-      cidr_block   = cidrsubnet(var.cidr_range, 8, 1)
+      cidr_block   = "${google_compute_instance.bastion_instance.network_interface[0].network_ip}/32"
       display_name = "master-authorized-networks"
     }
     cidr_blocks {
@@ -51,6 +51,20 @@ resource "google_container_cluster" "gke_cluster" {
 
   }
 
+  cluster_autoscaling {
+    enabled = true
+    resource_limits {
+      resource_type = "cpu"
+      minimum       = 1
+      maximum       = 8
+    }
+    resource_limits {
+      resource_type = "memory"
+      minimum       = 1
+      maximum       = 8
+    }
+  }
+
   binary_authorization {
     evaluation_mode = "PROJECT_SINGLETON_POLICY_ENFORCE"
   }
@@ -59,6 +73,3 @@ resource "google_container_cluster" "gke_cluster" {
     workload_pool = "${var.project_id}.svc.id.goog"
   }
 }
-
-
- 

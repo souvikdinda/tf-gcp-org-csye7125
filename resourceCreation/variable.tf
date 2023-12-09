@@ -28,15 +28,15 @@ variable "node_count" {
 }
 
 variable "min_node_count" {
-  default = 3
+  default = 1
 }
 
 variable "max_node_count" {
-  default = 6
+  default = 2
 }
 
 variable "node_machine_type" {
-  default = "e2-medium"
+  default = "n2-standard-2"
 }
 
 variable "node_disk_size_gb" {
@@ -63,22 +63,10 @@ variable "bastion_username" {
   default = "vaishnavi"
 }
 
+variable "bastion_host_ip" {
+  default = "10.0.1.1/32"
+}
+
 variable "jenkins_ip" {
   default = "54.198.138.212/32"
 }
-
-# variable "github_repo" {
-#   default = ""
-# }
-
-# variable "github_username" {
-#   default = ""
-# }
-
-# variable "github_token" {
-#   default = ""
-# }
-
-# variable "helm_chart_version" {
-#   default = "1.1.0"
-# }
