@@ -17,14 +17,14 @@ resource "google_compute_subnetwork" "gcp_subnet" {
 
 
 # Private Subnet
-resource "google_compute_subnetwork" "private_gcp_subnet" {
-  name                     = "private-subnet"
-  ip_cidr_range            = cidrsubnet(var.cidr_range, 8, 2)
-  region                   = var.region
-  network                  = google_compute_network.gcp_vpc.id
-  private_ip_google_access = true
-  project                  = var.project_id
-}
+# resource "google_compute_subnetwork" "private_gcp_subnet" {
+#   name                     = "private-subnet"
+#   ip_cidr_range            = cidrsubnet(var.cidr_range, 8, 2)
+#   region                   = var.region
+#   network                  = google_compute_network.gcp_vpc.id
+#   private_ip_google_access = true
+#   project                  = var.project_id
+# }
 
 
 # Firewall rules that allows traffic from anywhere for SSH, HTTP, HTTPs
@@ -51,7 +51,6 @@ resource "google_compute_address" "external_ip" {
   name       = "external-ip"
   region     = var.region
   project    = var.project_id
-  # depends_on = [google_project_service.compute]
 }
 
 # Router for above subnet
@@ -75,32 +74,32 @@ resource "google_compute_router_interface" "subnet_interface" {
   subnetwork = google_compute_subnetwork.gcp_subnet.self_link
 }
 
-resource "google_compute_router" "pvt_router" {
-  name    = "pvt-router"
-  network = google_compute_network.gcp_vpc.id
-  project = var.project_id
-}
+# resource "google_compute_router" "pvt_router" {
+#   name    = "pvt-router"
+#   network = google_compute_network.gcp_vpc.id
+#   project = var.project_id
+# }
 
 # Map above created router to the subnet
-resource "google_compute_router_interface" "pvt_subnet_interface" {
-  name       = "pvt-subnet-router-interface"
-  router     = google_compute_router.pvt_router.name
-  project    = var.project_id
-  region     = var.region
-  subnetwork = google_compute_subnetwork.private_gcp_subnet.self_link
-}
+# resource "google_compute_router_interface" "pvt_subnet_interface" {
+#   name       = "pvt-subnet-router-interface"
+#   router     = google_compute_router.pvt_router.name
+#   project    = var.project_id
+#   region     = var.region
+#   subnetwork = google_compute_subnetwork.private_gcp_subnet.self_link
+# }
 
 
 # NAT Gateway for private subnets
 resource "google_compute_router_nat" "nat_gateway" {
   project                            = var.project_id
   name                               = "nat-gateway1"
-  router                             = google_compute_router.pvt_router.name
+  router                             = google_compute_router.main_router.name
   region                             = var.region
   nat_ip_allocate_option             = "AUTO_ONLY"
   source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
   subnetwork {
-    name                    = google_compute_subnetwork.private_gcp_subnet.name
+    name                    = google_compute_subnetwork.gcp_subnet.name
     source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
   }
 }
